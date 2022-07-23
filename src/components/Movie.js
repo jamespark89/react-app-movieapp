@@ -1,26 +1,45 @@
-import PropTypes from "prop-types"
-import { Link } from "react-router-dom"
+import { useState, useEffect } from "react"
 
-function Movie({ id, coverImg, title, year, rating }) {
+function Movie({ searchTerm }) {
+  const [loading, setLoading] = useState(true)
+  const [movies, setMovies] = useState([])
+  const [noresult, setNoresult] = useState(false)
+  const getMoviesByQuery = async () => {
+    setNoresult(false)
+    setLoading(true)
+    const json = await (
+      await fetch(
+        `https://yts.mx/api/v2/list_movies.json?minimum_rating=3&sort_by=year&query_term=${searchTerm}`
+      )
+    ).json()
+    //fetch api calls undefined if there is no result??
+    json.data.movies !== undefined
+      ? setMovies(json.data.movies)
+      : setNoresult(true)
+    setLoading(false)
+  }
+  useEffect(() => {
+    getMoviesByQuery()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTerm])
+  console.log(noresult)
+
   return (
     <div>
-      <Link to={`/movie/${id}`}>
-        <img src={coverImg} alt={title} />
-      </Link>
-      <h2>
-        {title}({year})
-      </h2>
-      <p>{rating}</p>
+      <h1>movies</h1>
+      {loading ? (
+        <h2> Loading...</h2>
+      ) : noresult ? (
+        <h2>No result</h2>
+      ) : (
+        <div>
+          {movies.map((movie) => (
+            <p key={movie.id}>{movie.title}</p>
+          ))}
+        </div>
+      )}
     </div>
   )
-}
-
-Movie.propTypes = {
-  id: PropTypes.number.isRequired,
-  coverImg: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  year: PropTypes.number.isRequired,
-  rating: PropTypes.number.isRequired
 }
 
 export default Movie
