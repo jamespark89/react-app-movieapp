@@ -15,32 +15,37 @@ function Detail() {
     ).json()
     setMovie(json.data.movie)
   }
-
   useEffect(() => {
     getMovieById()
+    setMovie([])
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-  console.log(movie)
+  }, [id])
   return (
     <div>
-      <Navbar setSearchTerm={setSearchTerm} />
-      <h1>Detail</h1>
-      <ul>
-        <li>
-          <img
-            src={movie.large_cover_image}
-            alt={movie.slug}
-          ></img>
-        </li>
-        <li>{movie.title_long}</li>
-        <li>{movie.rating}</li>
-        <li>{movie.runtime}</li>
-        {movie.genres > 1
-          ? movie.genres.map((item) => <li>{item}</li>)
-          : movie.genres}
+      <Navbar setSearchTerm={setSearchTerm} id={id} />
+      {!searchTerm ? (
+        <>
+          <h1>Detail</h1>
+          <ul>
+            <li>
+              <img
+                src={movie.large_cover_image}
+                alt={movie.slug}
+              ></img>
+            </li>
+            <li>{movie.title_long}</li>
+            <li>{movie.rating}</li>
+            <li>{movie.runtime}</li>
+            {movie.genres > 1
+              ? movie.genres.map((item) => <li>{item}</li>)
+              : movie.genres}
 
-        <li>{movie.title}</li>
-      </ul>
+            <li>{movie.title}</li>
+          </ul>
+        </>
+      ) : (
+        <Movie searchTerm={searchTerm} />
+      )}
     </div>
   )
 }

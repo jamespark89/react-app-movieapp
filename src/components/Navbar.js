@@ -50,18 +50,22 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     }
   }
 }))
-export default function Navbar({ setSearchTerm }) {
+export default function Navbar({ setSearchTerm, id }) {
   const [state, setState] = useState("")
   const inputHandler = (e) => {
     setState(e.target.value.toLowerCase())
   }
+  //setTimeout for input delay
   useEffect(() => {
     const timer = setTimeout(() => {
       setSearchTerm(state)
     }, 500)
     return () => clearTimeout(timer)
   }, [setSearchTerm, state])
-
+  //reset inpu field when id changes
+  useEffect(() => {
+    setState("")
+  }, [id])
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">

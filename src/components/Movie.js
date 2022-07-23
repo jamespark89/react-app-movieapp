@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { Link } from "react-router-dom"
 
 function Movie({ searchTerm }) {
   const [loading, setLoading] = useState(true)
@@ -22,7 +23,6 @@ function Movie({ searchTerm }) {
     getMoviesByQuery()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm])
-  console.log(noresult)
 
   return (
     <div>
@@ -34,7 +34,15 @@ function Movie({ searchTerm }) {
       ) : (
         <div>
           {movies.map((movie) => (
-            <p key={movie.id}>{movie.title}</p>
+            <div key={movie.id}>
+              <Link to={`/movie/${movie.id}`}>
+                <img
+                  src={movie.medium_cover_image}
+                  alt={movie.slug}
+                ></img>
+              </Link>
+              <li>{movie.title_long}</li>
+            </div>
           ))}
         </div>
       )}
