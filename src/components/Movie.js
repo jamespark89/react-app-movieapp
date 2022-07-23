@@ -11,7 +11,7 @@ const Item = styled(Paper)(({ theme }) => ({
     theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   ...theme.typography.body2,
   padding: theme.spacing(1),
-  margin: "1rem",
+  margin: theme.spacing(1),
   textAlign: "center",
   color: theme.palette.text.secondary
 }))
@@ -41,36 +41,44 @@ function Movie({ searchTerm }) {
 
   return (
     <Box>
-      <h1>Recent movies</h1>
+      <h2>
+        {searchTerm
+          ? `search By "${searchTerm}"`
+          : "Recent Movies"}
+      </h2>
       {loading ? (
         <h2> Loading...</h2>
       ) : noresult ? (
         <h2>No result</h2>
       ) : (
         <Box sx={{ flexGrow: 1 }}>
-          <Grid
-            container
-            justifyContent="center"
-            spacing={{ xs: 2, md: 3 }}
-            column={{ xs: 4, sm: 8, md: 12 }}
-          >
+          <Grid container justifyContent="center">
             {movies.map((movie) => (
-              <Item key={movie.id}>
-                <Link to={`/movie/${movie.id}`}>
-                  <img
-                    src={movie.medium_cover_image}
-                    alt={movie.slug}
-                  ></img>
-                </Link>
-                <li
-                  style={{
-                    listStyleType: "none",
-                    maxWidth: "230px"
-                  }}
-                >
-                  {movie.title_long}
-                </li>
-              </Item>
+              <Grid
+                key={movie.id}
+                item
+                xs={12}
+                sm={6}
+                md={3}
+                lg={2.4}
+              >
+                <Item>
+                  <Link to={`/movie/${movie.id}`}>
+                    <img
+                      src={movie.medium_cover_image}
+                      alt={movie.slug}
+                    ></img>
+                  </Link>
+                  <li
+                    style={{
+                      listStyleType: "none",
+                      maxWidth: "230px"
+                    }}
+                  >
+                    {movie.title_long}
+                  </li>
+                </Item>
+              </Grid>
             ))}
           </Grid>
         </Box>

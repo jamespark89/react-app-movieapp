@@ -78,7 +78,7 @@ export default function Navbar({ setSearchTerm, id }) {
             sx={{ mr: 2 }}
           >
             <a href="/">
-              <HomeIcon color="action" />
+              <HomeIcon fontSize="large" color="action" />
             </a>
           </IconButton>
           <Typography
