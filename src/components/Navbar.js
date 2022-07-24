@@ -51,7 +51,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     }
   }
 }))
-export default function Navbar({ setSearchTerm, id }) {
+
+function Navbar({ setSearchTerm, id }) {
   const [state, setState] = useState("")
   const inputHandler = (e) => {
     setState(e.target.value.toLowerCase())
@@ -90,7 +91,7 @@ export default function Navbar({ setSearchTerm, id }) {
               display: { sm: "block" }
             }}
           >
-            React <i>Movie</i>
+            React<i>Movie</i>
           </Typography>
           <Search>
             <SearchIconWrapper>
@@ -108,3 +109,4 @@ export default function Navbar({ setSearchTerm, id }) {
     </Box>
   )
 }
+export default Navbar
