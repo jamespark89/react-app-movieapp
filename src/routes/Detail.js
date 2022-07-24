@@ -3,8 +3,13 @@ import { useParams } from "react-router-dom"
 import Navbar from "../components/Navbar"
 import Movie from "../components/Movie"
 import Rating from "@mui/material/Rating"
-import { Box, Card, CardContent } from "@mui/material"
-import { Container } from "@mui/system"
+import StarIcon from "@mui/icons-material/Star"
+import {
+  Box,
+  Card,
+  CardContent,
+  Container
+} from "@mui/material"
 
 function Detail() {
   const { id } = useParams()
@@ -40,52 +45,78 @@ function Detail() {
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center",
-            display: { md: "flex" }
+            padding: "1rem"
           }}
         >
           <Container
             sx={{
-              display: "flex",
-              justifyContent: "center"
+              height: "100%",
+              display: { md: "flex" },
+              backgroundColor: "rgba(0, 0, 0, 0.5)"
             }}
+            disableGutters
           >
             <img
               src={movie.large_cover_image}
               alt={movie.slug}
-              style={{ maxWidth: "100%", margin: "1rem" }}
+              style={{
+                objectFit: "cover",
+                width: "100%",
+                height: "500px"
+              }}
             ></img>
+
+            <Card
+              sx={{
+                maxWidth: { md: "50%", lg: "60%" },
+                backgroundColor: "transparent"
+              }}
+            >
+              <CardContent
+                sx={{ fontSize: "20px", color: "white" }}
+              >
+                <ul
+                  style={{
+                    listStyleType: "none",
+                    padding: 0,
+                    margin: 0
+                  }}
+                >
+                  <h2>{movie.title_long}</h2>
+                  <Rating
+                    max={10}
+                    value={movie.rating || 0}
+                    precision={0.1}
+                    readOnly
+                    emptyIcon={
+                      <StarIcon
+                        style={{ color: "white" }}
+                        fontSize="inherit"
+                      />
+                    }
+                  />
+
+                  <span>{movie.rating} / 10</span>
+
+                  <li style={{ marginTop: "1rem" }}>
+                    <span>Running Time :</span>
+                    {movie.runtime}min
+                  </li>
+                  <li style={{ marginTop: "0.5rem" }}>
+                    <span>Genre : </span>
+                    {movie.genres.length > 1
+                      ? movie.genres.map((item, key) => (
+                          <span key={key}>{item} </span>
+                        ))
+                      : movie.genres}
+                  </li>
+                  <li style={{ marginTop: "0.5rem" }}>
+                    {movie.description_full}
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
           </Container>
-          <Card sx={{ maxWidth: { md: "50%", lg: "60%" } }}>
-            <CardContent sx={{ fontSize: "20px" }}>
-              <ul style={{ listStyleType: "none" }}>
-                <h2>{movie.title_long}</h2>
-                <Rating
-                  max={10}
-                  value={movie.rating || 0}
-                  precision={0.1}
-                  readOnly
-                />
-
-                <span>{movie.rating}</span>
-
-                <li style={{ marginTop: "1rem" }}>
-                  <span>Running Time :</span>
-                  {movie.runtime}
-                </li>
-                <li style={{ marginTop: "0.5rem" }}>
-                  <span>Genre : </span>
-                  {movie.genres.length > 1
-                    ? movie.genres.map((item, key) => (
-                        <span key={key}>{item} </span>
-                      ))
-                    : movie.genres}
-                </li>
-                <li style={{ marginTop: "0.5rem" }}>
-                  {movie.description_full}
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
         </Box>
       )}
     </Box>

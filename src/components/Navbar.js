@@ -9,6 +9,7 @@ import InputBase from "@mui/material/InputBase"
 import HomeIcon from "@mui/icons-material/Home"
 import SearchIcon from "@mui/icons-material/Search"
 import { useState, useEffect } from "react"
+import { Link } from "react-router-dom"
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -77,9 +78,9 @@ export default function Navbar({ setSearchTerm, id }) {
             aria-label="open drawer"
             sx={{ mr: 2 }}
           >
-            <a href="/">
+            <Link to="/">
               <HomeIcon fontSize="large" color="action" />
-            </a>
+            </Link>
           </IconButton>
           <Typography
             variant="h6"

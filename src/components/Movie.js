@@ -1,10 +1,10 @@
 import * as React from "react"
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
-import { styled } from "@mui/material/styles"
 import Box from "@mui/material/Box"
 import Paper from "@mui/material/Paper"
 import Grid from "@mui/material/Grid"
+import { styled } from "@mui/material"
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
@@ -13,7 +13,15 @@ const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
   margin: theme.spacing(1),
   textAlign: "center",
-  color: theme.palette.text.secondary
+  maxWidth: "300px",
+  color: theme.palette.text.secondary,
+  "&:hover": {
+    transform: "scale(1.1)",
+    backgroundColor: theme.palette.primary.dark,
+    "& .movieTitle": {
+      color: "white"
+    }
+  }
 }))
 
 function Movie({ searchTerm }) {
@@ -55,6 +63,8 @@ function Movie({ searchTerm }) {
           <Grid container justifyContent="center">
             {movies.map((movie) => (
               <Grid
+                container
+                justifyContent="center"
                 key={movie.id}
                 item
                 xs={12}
@@ -65,11 +75,14 @@ function Movie({ searchTerm }) {
                 <Item>
                   <Link to={`/movie/${movie.id}`}>
                     <img
+                      loading="lazy"
                       src={movie.medium_cover_image}
                       alt={movie.slug}
+                      style={{ maxWidth: "100%" }}
                     ></img>
                   </Link>
                   <li
+                    className="movieTitle"
                     style={{
                       listStyleType: "none",
                       maxWidth: "230px"
