@@ -6,6 +6,7 @@ import Paper from "@mui/material/Paper"
 import Grid from "@mui/material/Grid"
 import { styled } from "@mui/material"
 import LoadMoreBtn from "./LoadMoreBtn"
+import { useParams } from "react-router-dom"
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
@@ -29,54 +30,72 @@ function Movie({
   setSearchTerm,
   searchTerm,
   setLoadMore,
-  loadMore
+  loadMore,
+  setHeroMovie
 }) {
+  const { id } = useParams()
   const [loading, setLoading] = useState(true)
   const [movies, setMovies] = useState([])
   const [noresult, setNoresult] = useState(false)
   const [pageNumber, setPageNumber] = useState(1)
   const [movieCount, setMovieCount] = useState(0)
-
-  const getMoviesByQuery = async () => {
-    if (pageNumber > 1 && loadMore === true) {
-      const json = await (
-        await fetch(
-          `https://yts.mx/api/v2/list_movies.json?minimum_rating=3&sort_by=year&query_term=${searchTerm}&page=${pageNumber}`
-        )
-      ).json()
-      setMovieCount(json.data.movie_count)
-
-      //if ther is no more result, pop up alert
-      json.data.movies === undefined
-        ? alert("No more movies")
-        : setMovies((prev) => [
-            ...prev,
-            ...json.data.movies
-          ])
-      setLoadMore(false)
-    } else {
-      setNoresult(false)
-      setLoading(true)
-      const json = await (
-        await fetch(
-          `https://yts.mx/api/v2/list_movies.json?minimum_rating=3&sort_by=year&query_term=${searchTerm}`
-        )
-      ).json()
-      //fetch api calls undefined if there is no result??
-      json.data.movies === undefined
-        ? setNoresult(true)
-        : setMovies(json.data.movies)
-      setLoading(false)
-      setMovieCount(json.data.movie_count)
-    }
+  //fetch data
+  const getMoviesInit = async () => {
+    const json = await (
+      await fetch(
+        `https://yts.mx/api/v2/list_movies.json?minimum_rating=8&sort_by=year&`
+      )
+    ).json()
+    setMovies(json.data.movies)
+    if (id == null) setHeroMovie(json.data.movies)
+    setLoading(false)
+  }
+  const getMoviesbyQuery = async () => {
+    setLoading(true)
+    setNoresult(false)
+    const json = await (
+      await fetch(
+        `https://yts.mx/api/v2/list_movies.json?minimum_rating=3&sort_by=year&query_term=${searchTerm}&page=${pageNumber}`
+      )
+    ).json()
+    json.data.movies === undefined
+      ? setNoresult(true)
+      : setMovies(json.data.movies)
+    setLoading(false)
+    setMovieCount(json.data.movie_count)
+  }
+  const loadMoreMovie = async () => {
+    const json = await (
+      await fetch(
+        `https://yts.mx/api/v2/list_movies.json?minimum_rating=3&sort_by=year&query_term=${searchTerm}&page=${pageNumber}`
+      )
+    ).json()
+    json.data.movies === undefined
+      ? alert("No more movies") //if ther is no more result, pop up alert
+      : setMovies((prev) => [...prev, ...json.data.movies])
+    setLoading(false)
+    setMovieCount(json.data.movie_count)
+    setLoadMore(false)
   }
   useEffect(() => {
-    getMoviesByQuery()
+    getMoviesInit()
+    console.log("init")
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm, pageNumber])
-
+  }, [])
+  useEffect(() => {
+    getMoviesbyQuery()
+    console.log("searchbyquery")
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTerm])
+  useEffect(() => {
+    if (pageNumber > 1 && loadMore) {
+      loadMoreMovie()
+      console.log("loadMormovie")
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pageNumber])
   return (
-    <Box>
+    <Box sx={{ margin: "1rem" }}>
       <h2>
         {searchTerm ? (
           <span>
@@ -93,11 +112,11 @@ function Movie({
       ) : (
         <Box sx={{ flexGrow: 1 }}>
           <Grid container justifyContent="center">
-            {movies.map((movie) => (
+            {movies.map((movie, index) => (
               <Grid
                 container
                 justifyContent="center"
-                key={movie.id}
+                key={index}
                 item
                 xs={12}
                 sm={6}

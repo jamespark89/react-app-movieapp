@@ -34,10 +34,10 @@ function Detail() {
   return (
     <Box>
       <Navbar setSearchTerm={setSearchTerm} id={id} />
-      {searchTerm !== "" ? (
-        <Movie searchTerm={searchTerm} />
-      ) : loading ? (
+      {loading ? (
         <h1>Loading...</h1>
+      ) : searchTerm !== "" ? (
+        <Movie searchTerm={searchTerm} />
       ) : (
         <Box
           sx={{
@@ -95,16 +95,14 @@ function Detail() {
                       />
                     }
                   />
-
                   <span>{movie.rating} / 10</span>
-
                   <li style={{ marginTop: "1rem" }}>
                     <span>Running Time :</span>
                     {movie.runtime}min
                   </li>
                   <li style={{ marginTop: "0.5rem" }}>
                     <span>Genre : </span>
-                    {movie.genres.length > 1
+                    {movie.genres?.length > 1
                       ? movie.genres.map((item, key) => (
                           <span key={key}>{item} </span>
                         ))
