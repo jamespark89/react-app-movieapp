@@ -8,7 +8,7 @@ import Detail from "./routes/Detail"
 
 function App() {
   return (
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
       <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route

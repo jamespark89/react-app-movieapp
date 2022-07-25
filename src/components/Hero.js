@@ -1,6 +1,8 @@
 import styled from "@emotion/styled"
+
 import { Box } from "@mui/system"
 import { keyframes } from "@mui/system"
+import { Link } from "react-router-dom"
 const myEffect = keyframes`
  from {
   left:0px
@@ -14,31 +16,51 @@ const StyledCarousel = styled("div")({
   width: "100%",
   display: "flex",
   animation: `${myEffect} linear 60s infinite `,
-  position: "absolute"
+  position: "absolute",
+  "&:hover": {
+    animationPlayState: "paused"
+  },
+  "& img": {
+    "&:hover": {
+      cursor: "pointer",
+      transform: "scale(1.03)"
+    }
+  }
 })
 
+// const styles = (theme) => ({
+//   image: {
+//     "&:hover": {
+//       transform: "scale(1.1)"
+//     }
+//   }
+// })
 export default function Hero({ HeroMovie }) {
   return (
     <Box sx={{ height: "400px" }}>
       <StyledCarousel>
         {HeroMovie.map((item) => (
-          <img
-            key={item.id}
-            src={item.large_cover_image}
-            alt={item.slug}
-            style={{
-              height: "400px",
-              width: "340px"
-            }}
-          />
+          <Link to={`/movie/${item.id}`} key={item.id}>
+            <img
+              className="image"
+              src={item.large_cover_image}
+              alt={item.slug}
+              style={{
+                height: "400px",
+                width: "340px"
+              }}
+            />
+          </Link>
         ))}
         {HeroMovie.map((item) => (
-          <img
-            key={item.id}
-            src={item.large_cover_image}
-            alt={item.slug}
-            style={{ height: "400px", width: "340px" }}
-          />
+          <Link to={`/movie/${item.id}`} key={item.id}>
+            <img
+              className="image"
+              src={item.large_cover_image}
+              alt={item.slug}
+              style={{ height: "400px", width: "340px" }}
+            />
+          </Link>
         ))}
       </StyledCarousel>
     </Box>

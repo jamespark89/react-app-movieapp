@@ -55,7 +55,7 @@ function Movie({
     setNoresult(false)
     const json = await (
       await fetch(
-        `https://yts.mx/api/v2/list_movies.json?minimum_rating=3&sort_by=year&query_term=${searchTerm}&page=${pageNumber}`
+        `https://yts.mx/api/v2/list_movies.json?minimum_rating=3&sort_by=year&query_term=${searchTerm}`
       )
     ).json()
     json.data.movies === undefined
@@ -84,6 +84,7 @@ function Movie({
   }, [])
   useEffect(() => {
     getMoviesbyQuery()
+    setPageNumber(1)
     console.log("searchbyquery")
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm])
@@ -91,6 +92,7 @@ function Movie({
     if (pageNumber > 1 && loadMore) {
       loadMoreMovie()
       console.log("loadMormovie")
+      setLoadMore(false)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber])

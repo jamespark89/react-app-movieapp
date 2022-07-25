@@ -45,7 +45,7 @@ function Detail() {
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center",
-            padding: "1rem"
+            padding: "4rem 1rem"
           }}
         >
           <Container
