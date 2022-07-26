@@ -64,7 +64,7 @@ function Navbar({ setSearchTerm, id }) {
     }, 500)
     return () => clearTimeout(timer)
   }, [setSearchTerm, state])
-  //reset inpu field when id changes
+  //reset input field when id changes
   useEffect(() => {
     setState("")
   }, [id])

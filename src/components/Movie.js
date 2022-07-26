@@ -41,78 +41,88 @@ function Movie({
   const [movieCount, setMovieCount] = useState(0)
   //fetch data
   const getMoviesInit = async () => {
-    const json = await (
-      await fetch(
-        `https://yts.mx/api/v2/list_movies.json?minimum_rating=8&sort_by=year&`
-      )
-    ).json()
-    setMovies(json.data.movies)
-    if (id == null) setHeroMovie(json.data.movies)
-    setLoading(false)
+    setLoading(true)
+    await await fetch(
+      `https://yts.mx/api/v2/list_movies.json?minimum_rating=8&sort_by=year&`
+    )
+      .then((res) => res.json())
+      .then((res) => {
+        setMovies(res.data.movies)
+        if (id == null) {
+          setHeroMovie(res.data.movies)
+        }
+        setLoading(false)
+      })
   }
   const getMoviesbyQuery = async () => {
     setLoading(true)
     setNoresult(false)
-    const json = await (
-      await fetch(
-        `https://yts.mx/api/v2/list_movies.json?minimum_rating=3&sort_by=year&query_term=${searchTerm}`
-      )
-    ).json()
-    json.data.movies === undefined
-      ? setNoresult(true)
-      : setMovies(json.data.movies)
-    setLoading(false)
-    setMovieCount(json.data.movie_count)
+    await fetch(
+      `https://yts.mx/api/v2/list_movies.json?minimum_rating=3&sort_by=year&query_term=${searchTerm}`
+    )
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.data.movies === undefined) {
+          setNoresult(true)
+        } else {
+          setMovies(res.data.movies)
+          setMovieCount(res.data.movie_count)
+        }
+        setLoading(false)
+      })
   }
   const loadMoreMovie = async () => {
-    const json = await (
-      await fetch(
-        `https://yts.mx/api/v2/list_movies.json?minimum_rating=3&sort_by=year&query_term=${searchTerm}&page=${pageNumber}`
-      )
-    ).json()
-    json.data.movies === undefined
-      ? alert("No more movies") //if ther is no more result, pop up alert
-      : setMovies((prev) => [...prev, ...json.data.movies])
-    setLoading(false)
-    setMovieCount(json.data.movie_count)
-    setLoadMore(false)
+    await fetch(
+      `https://yts.mx/api/v2/list_movies.json?minimum_rating=3&sort_by=year&query_term=${searchTerm}&page=${pageNumber}`
+    )
+      .then((res) => res.json())
+      .then((res) => res.data)
+      .then((data) => {
+        if (data.movies === undefined) {
+          alert("No more movies")
+        } //if ther is no more result, pop up alert
+        else {
+          setMovies((prev) => [...prev, ...data.movies])
+          setMovieCount(data.movie_count)
+        }
+        setLoading(false)
+        setLoadMore(false)
+      })
   }
   useEffect(() => {
     getMoviesInit()
-    console.log("init")
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   useEffect(() => {
     getMoviesbyQuery()
     setPageNumber(1)
-    console.log("searchbyquery")
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm])
   useEffect(() => {
     if (pageNumber > 1 && loadMore) {
       loadMoreMovie()
-      console.log("loadMormovie")
       setLoadMore(false)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber])
   return (
     <Box sx={{ margin: "1rem" }}>
-      <h2>
-        {searchTerm ? (
-          <span>
-            "{movieCount}" movies search By "{searchTerm}"
-          </span>
-        ) : (
-          "Recent Movies"
-        )}
-      </h2>
       {loading ? (
         <h2> Loading...</h2>
       ) : noresult ? (
-        <h2>No result</h2>
+        <h2>No result by "{searchTerm}"</h2>
       ) : (
         <Box sx={{ flexGrow: 1 }}>
+          <h2>
+            {searchTerm ? (
+              <span>
+                "{movieCount}" movies search By "
+                {searchTerm}"
+              </span>
+            ) : (
+              "Recent Movies"
+            )}
+          </h2>
           <Grid container justifyContent="center">
             {movies.map((movie, index) => (
               <Grid
