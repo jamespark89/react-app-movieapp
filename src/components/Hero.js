@@ -16,7 +16,7 @@ const StyledCarousel = styled("div")({
   width: "100%",
   display: "flex",
   animation: `${myEffect} linear 60s infinite `,
-  position: "absolute",
+  position: "relative",
   "&:hover": {
     animationPlayState: "paused"
   },
@@ -37,7 +37,7 @@ const StyledCarousel = styled("div")({
 // })
 export default function Hero({ HeroMovie }) {
   return (
-    <Box sx={{ height: "400px" }}>
+    <Box sx={{ height: "400px", overflow: "hidden" }}>
       <StyledCarousel>
         {HeroMovie.map((item) => (
           <Link to={`/movie/${item.id}`} key={item.id}>

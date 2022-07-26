@@ -62,7 +62,7 @@ function Detail() {
               style={{
                 objectFit: "cover",
                 width: "100%",
-                height: "500px"
+                maxHeight: "750px"
               }}
             ></img>
 
