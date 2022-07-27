@@ -54,6 +54,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 function Navbar({ setSearchTerm, id }) {
   const [state, setState] = useState("")
+  const HomeClick = () => {
+    setState("")
+  }
   const inputHandler = (e) => {
     setState(e.target.value.toLowerCase())
   }
@@ -80,7 +83,11 @@ function Navbar({ setSearchTerm, id }) {
             sx={{ mr: 2 }}
           >
             <Link to="/">
-              <HomeIcon fontSize="large" color="action" />
+              <HomeIcon
+                onClick={HomeClick}
+                fontSize="large"
+                color="action"
+              />
             </Link>
           </IconButton>
           <Typography

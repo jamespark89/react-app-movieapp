@@ -17,12 +17,16 @@ function Detail() {
   const [searchTerm, setSearchTerm] = useState("")
   const [movie, setMovie] = useState([])
   const getMovieById = async () => {
-    const json = await (
-      await fetch(
-        `https://yts.mx/api/v2/movie_details.json?movie_id=${id}`
-      )
-    ).json()
-    setMovie(json.data.movie)
+    try {
+      const json = await (
+        await fetch(
+          `https://yts.mx/api/v2/movie_details.json?movie_id=${id}`
+        )
+      ).json()
+      setMovie(json.data.movie)
+    } catch (e) {
+      new Error("Network Error")
+    }
     setLoading(false)
   }
   useEffect(() => {

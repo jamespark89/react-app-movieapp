@@ -42,7 +42,7 @@ function Movie({
   //fetch data
   const getMoviesInit = async () => {
     setLoading(true)
-    await await fetch(
+    await fetch(
       `https://yts.mx/api/v2/list_movies.json?minimum_rating=8&sort_by=year&`
     )
       .then((res) => res.json())
@@ -51,8 +51,9 @@ function Movie({
         if (id == null) {
           setHeroMovie(res.data.movies)
         }
-        setLoading(false)
       })
+      .catch((error) => new Error("Network Error"))
+    setLoading(false)
   }
   const getMoviesbyQuery = async () => {
     setLoading(true)
@@ -68,8 +69,9 @@ function Movie({
           setMovies(res.data.movies)
           setMovieCount(res.data.movie_count)
         }
-        setLoading(false)
       })
+      .catch((error) => new Error("Network Error"))
+    setLoading(false)
   }
   const loadMoreMovie = async () => {
     await fetch(
@@ -85,22 +87,29 @@ function Movie({
           setMovies((prev) => [...prev, ...data.movies])
           setMovieCount(data.movie_count)
         }
-        setLoading(false)
-        setLoadMore(false)
       })
+      .catch((error) => new Error("Network Error"))
+    setLoading(false)
+    setLoadMore(false)
   }
   useEffect(() => {
-    getMoviesInit()
+    getMoviesInit().catch((error) =>
+      alert("please try later")
+    )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   useEffect(() => {
-    getMoviesbyQuery()
+    getMoviesbyQuery().catch((error) =>
+      alert("please try later")
+    )
     setPageNumber(1)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm])
   useEffect(() => {
     if (pageNumber > 1 && loadMore) {
-      loadMoreMovie()
+      loadMoreMovie().catch((error) =>
+        alert("please try later")
+      )
       setLoadMore(false)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

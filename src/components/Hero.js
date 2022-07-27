@@ -28,13 +28,6 @@ const StyledCarousel = styled("div")({
   }
 })
 
-// const styles = (theme) => ({
-//   image: {
-//     "&:hover": {
-//       transform: "scale(1.1)"
-//     }
-//   }
-// })
 export default function Hero({ HeroMovie }) {
   return (
     <Box sx={{ height: "400px", overflow: "hidden" }}>
