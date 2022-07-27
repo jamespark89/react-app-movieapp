@@ -31,10 +31,12 @@ function Movie({
   searchTerm,
   setLoadMore,
   loadMore,
-  setHeroMovie
+  setHeroMovie,
+  loading,
+  setLoading
 }) {
   const { id } = useParams()
-  const [loading, setLoading] = useState(true)
+
   const [movies, setMovies] = useState([])
   const [noresult, setNoresult] = useState(false)
   const [pageNumber, setPageNumber] = useState(1)
@@ -114,11 +116,10 @@ function Movie({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber])
+
   return (
     <Box sx={{ margin: "1rem" }}>
-      {loading ? (
-        <h2> Loading...</h2>
-      ) : noresult ? (
+      {loading ? null : noresult ? (
         <h2>No result by "{searchTerm}"</h2>
       ) : (
         <Box sx={{ flexGrow: 1 }}>
@@ -166,13 +167,13 @@ function Movie({
               </Grid>
             ))}
           </Grid>
+          <LoadMoreBtn
+            setMovies={setMovies}
+            setPageNumber={setPageNumber}
+            setLoadMore={setLoadMore}
+          />
         </Box>
       )}
-      <LoadMoreBtn
-        setMovies={setMovies}
-        setPageNumber={setPageNumber}
-        setLoadMore={setLoadMore}
-      />
     </Box>
   )
 }
