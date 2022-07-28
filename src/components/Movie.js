@@ -8,6 +8,9 @@ import { styled } from "@mui/material"
 import LoadMoreBtn from "./LoadMoreBtn"
 import { useParams } from "react-router-dom"
 import LoadingSpinner from "../components/LoadingSpinner"
+import { useSelector, useDispatch } from "react-redux"
+import { bindActionCreators } from "redux"
+import { actionCreators } from "../state/index"
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
@@ -34,11 +37,16 @@ function Movie({
 }) {
   const { id } = useParams()
   const [loading, setLoading] = useState(true)
-  const [movies, setMovies] = useState([])
   const [noresult, setNoresult] = useState(false)
   const [pageNumber, setPageNumber] = useState(1)
   const [movieCount, setMovieCount] = useState(0)
   const [loadMore, setLoadMore] = useState(false)
+  const movies = useSelector((state) => state.movies)
+  const dispatch = useDispatch()
+  const { loadMovies, loadMoreMovies } = bindActionCreators(
+    actionCreators,
+    dispatch
+  )
   //fetch data
   const getMoviesInit = async () => {
     setLoading(true)
@@ -47,7 +55,7 @@ function Movie({
     )
       .then((res) => res.json())
       .then((res) => {
-        setMovies(res.data.movies)
+        loadMovies(res.data.movies)
         if (id == null) {
           setHeroMovie(res.data.movies)
         }
@@ -66,7 +74,7 @@ function Movie({
         if (res.data.movies === undefined) {
           setNoresult(true)
         } else {
-          setMovies(res.data.movies)
+          loadMovies(res.data.movies)
           setMovieCount(res.data.movie_count)
         }
       })
@@ -84,7 +92,7 @@ function Movie({
           alert("No more movies")
         } //if ther is no more result, pop up alert
         else {
-          setMovies((prev) => [...prev, ...data.movies])
+          loadMoreMovies(data.movies)
           setMovieCount(data.movie_count)
         }
       })
@@ -99,7 +107,6 @@ function Movie({
   useEffect(() => {
     getMoviesbyQuery()
     setPageNumber(1)
-    console.log("load ")
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm])
   useEffect(() => {
@@ -162,7 +169,7 @@ function Movie({
             ))}
           </Grid>
           <LoadMoreBtn
-            setMovies={setMovies}
+            setMovies={loadMovies}
             setPageNumber={setPageNumber}
             setLoadMore={setLoadMore}
             loadMore={loadMore}

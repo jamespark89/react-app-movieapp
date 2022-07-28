@@ -6,6 +6,7 @@ import Navbar from "../components/Navbar"
 function Home() {
   const [searchTerm, setSearchTerm] = useState("")
   const [HeroMovie, setHeroMovie] = useState([])
+
   return (
     <div className="App">
       <Navbar setSearchTerm={setSearchTerm} />
