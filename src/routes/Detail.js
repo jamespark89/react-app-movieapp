@@ -4,6 +4,8 @@ import Navbar from "../components/Navbar"
 import Movie from "../components/Movie"
 import Rating from "@mui/material/Rating"
 import StarIcon from "@mui/icons-material/Star"
+import LoadingSpinner from "../components/LoadingSpinner"
+import { styled } from "@mui/material"
 import {
   Box,
   Card,
@@ -11,12 +13,18 @@ import {
   Container
 } from "@mui/material"
 
+const StyledLoadingSpinner = styled(LoadingSpinner)(
+  ({ theme }) => ({
+    marginTop: "50%"
+  })
+)
 function Detail() {
   const { id } = useParams()
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [movie, setMovie] = useState([])
   const getMovieById = async () => {
+    setLoading(true)
     try {
       const json = await (
         await fetch(
@@ -39,7 +47,7 @@ function Detail() {
     <Box>
       <Navbar setSearchTerm={setSearchTerm} id={id} />
       {loading ? (
-        <h1>Loading...</h1>
+        <StyledLoadingSpinner />
       ) : searchTerm !== "" ? (
         <Movie searchTerm={searchTerm} />
       ) : (

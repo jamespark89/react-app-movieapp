@@ -7,6 +7,7 @@ import Grid from "@mui/material/Grid"
 import { styled } from "@mui/material"
 import LoadMoreBtn from "./LoadMoreBtn"
 import { useParams } from "react-router-dom"
+import LoadingSpinner from "../components/LoadingSpinner"
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
@@ -29,18 +30,15 @@ const Item = styled(Paper)(({ theme }) => ({
 function Movie({
   setSearchTerm,
   searchTerm,
-  setLoadMore,
-  loadMore,
-  setHeroMovie,
-  loading,
-  setLoading
+  setHeroMovie
 }) {
   const { id } = useParams()
-
+  const [loading, setLoading] = useState(true)
   const [movies, setMovies] = useState([])
   const [noresult, setNoresult] = useState(false)
   const [pageNumber, setPageNumber] = useState(1)
   const [movieCount, setMovieCount] = useState(0)
+  const [loadMore, setLoadMore] = useState(false)
   //fetch data
   const getMoviesInit = async () => {
     setLoading(true)
@@ -95,31 +93,27 @@ function Movie({
     setLoadMore(false)
   }
   useEffect(() => {
-    getMoviesInit().catch((error) =>
-      alert("please try later")
-    )
+    if (searchTerm === "") getMoviesInit()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   useEffect(() => {
-    getMoviesbyQuery().catch((error) =>
-      alert("please try later")
-    )
+    getMoviesbyQuery()
     setPageNumber(1)
+    console.log("load ")
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm])
   useEffect(() => {
     if (pageNumber > 1 && loadMore) {
-      loadMoreMovie().catch((error) =>
-        alert("please try later")
-      )
-      setLoadMore(false)
+      loadMoreMovie()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber])
 
   return (
     <Box sx={{ margin: "1rem" }}>
-      {loading ? null : noresult ? (
+      {loading ? (
+        <LoadingSpinner />
+      ) : noresult ? (
         <h2>No result by "{searchTerm}"</h2>
       ) : (
         <Box sx={{ flexGrow: 1 }}>
@@ -171,6 +165,7 @@ function Movie({
             setMovies={setMovies}
             setPageNumber={setPageNumber}
             setLoadMore={setLoadMore}
+            loadMore={loadMore}
           />
         </Box>
       )}

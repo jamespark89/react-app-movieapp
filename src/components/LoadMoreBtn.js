@@ -1,13 +1,15 @@
 import { Button } from "@mui/material"
 import { Box } from "@mui/system"
 import * as React from "react"
+import LoadingSpinner from "../components/LoadingSpinner"
 
 function LoadMoreBtn({
   setMovies,
   setPageNumber,
-  setLoadMore
+  setLoadMore,
+  loadMore
 }) {
-  const loadMore = () => {
+  const loadMoreMovies = () => {
     setPageNumber((prev) => prev + 1)
     setLoadMore(true)
   }
@@ -18,13 +20,17 @@ function LoadMoreBtn({
         margin: "2rem"
       }}
     >
-      <Button
-        onClick={loadMore}
-        variant="contained"
-        sx={{ margin: "auto" }}
-      >
-        Load More
-      </Button>
+      {loadMore ? (
+        <LoadingSpinner />
+      ) : (
+        <Button
+          onClick={loadMoreMovies}
+          variant="contained"
+          sx={{ margin: "auto" }}
+        >
+          Load More
+        </Button>
+      )}
     </Box>
   )
 }
