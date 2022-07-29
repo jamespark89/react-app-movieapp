@@ -30,11 +30,7 @@ const Item = styled(Paper)(({ theme }) => ({
   }
 }))
 
-function Movie({
-  setSearchTerm,
-  searchTerm,
-  setHeroMovie
-}) {
+function Movie({ searchTerm, setHeroMovie }) {
   const { id } = useParams()
   const [loading, setLoading] = useState(true)
   const [noresult, setNoresult] = useState(false)
@@ -54,14 +50,17 @@ function Movie({
       `https://yts.mx/api/v2/list_movies.json?minimum_rating=8&sort_by=year&`
     )
       .then((res) => res.json())
+
       .then((res) => {
         loadMovies(res.data.movies)
         if (id == null) {
           setHeroMovie(res.data.movies)
         }
       })
-      .catch((error) => new Error("Network Error"))
-    setLoading(false)
+      .then(() => setLoading(false))
+      .catch((error) => {
+        alert("Network Error, please try later")
+      })
   }
   const getMoviesbyQuery = async () => {
     setLoading(true)
@@ -78,8 +77,10 @@ function Movie({
           setMovieCount(res.data.movie_count)
         }
       })
-      .catch((error) => new Error("Network Error"))
-    setLoading(false)
+      .then(() => setLoading(false))
+      .catch((error) => {
+        alert("Network Error, please try later")
+      })
   }
   const loadMoreMovie = async () => {
     await fetch(
@@ -96,8 +97,8 @@ function Movie({
           setMovieCount(data.movie_count)
         }
       })
+      .then(setLoading(false))
       .catch((error) => new Error("Network Error"))
-    setLoading(false)
     setLoadMore(false)
   }
   useEffect(() => {
@@ -105,7 +106,7 @@ function Movie({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   useEffect(() => {
-    getMoviesbyQuery()
+    if (searchTerm !== "") getMoviesbyQuery()
     setPageNumber(1)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm])
@@ -115,7 +116,6 @@ function Movie({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber])
-
   return (
     <Box sx={{ margin: "1rem" }}>
       {loading ? (

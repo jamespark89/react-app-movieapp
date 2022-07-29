@@ -15,7 +15,7 @@ import {
 
 const StyledLoadingSpinner = styled(LoadingSpinner)(
   ({ theme }) => ({
-    marginTop: "50%"
+    marginTop: "400px"
   })
 )
 function Detail() {

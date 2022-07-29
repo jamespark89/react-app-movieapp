@@ -15,7 +15,6 @@ function Home() {
       ) : null}
       <Movie
         searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
         setHeroMovie={setHeroMovie}
       />
     </div>
