@@ -36,8 +36,8 @@ export default function Hero({ HeroMovie }) {
           <Link to={`/movie/${item.id}`} key={item.id}>
             <img
               className="image"
-              src={item.large_cover_image}
-              alt={item.slug}
+              src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+              alt={item.original_title}
               style={{
                 height: "400px",
                 width: "340px"
@@ -49,9 +49,12 @@ export default function Hero({ HeroMovie }) {
           <Link to={`/movie/${item.id}`} key={item.id}>
             <img
               className="image"
-              src={item.large_cover_image}
-              alt={item.slug}
-              style={{ height: "400px", width: "340px" }}
+              src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+              alt={item.original_title}
+              style={{
+                height: "400px",
+                width: "340px"
+              }}
             />
           </Link>
         ))}

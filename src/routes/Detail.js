@@ -28,10 +28,10 @@ function Detail() {
     try {
       const json = await (
         await fetch(
-          `https://yts.mx/api/v2/movie_details.json?movie_id=${id}`
+          `https://api.themoviedb.org/3/movie/${id}?api_key=78bce36c26d02da0ee348cdbbe4f56fc&query=${searchTerm}`
         )
       ).json()
-      setMovie(json.data.movie)
+      setMovie(json)
     } catch (e) {
       new Error("Network Error")
     }
@@ -53,7 +53,9 @@ function Detail() {
       ) : (
         <Box
           sx={{
-            backgroundImage: `url(${movie.background_image})`,
+            backgroundImage: `url(
+              https://image.tmdb.org/t/p/w500${movie.backdrop_path}
+            )`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center",
@@ -69,8 +71,8 @@ function Detail() {
             disableGutters
           >
             <img
-              src={movie.large_cover_image}
-              alt={movie.slug}
+              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              alt={movie.title}
               style={{
                 objectFit: "cover",
                 width: "100%",
@@ -94,10 +96,13 @@ function Detail() {
                     margin: 0
                   }}
                 >
-                  <h2>{movie.title_long}</h2>
+                  <h2>
+                    {movie.title}(
+                    {movie.release_date.slice(0, 4)})
+                  </h2>
                   <Rating
                     max={10}
-                    value={movie.rating || 0}
+                    value={movie.vote_average || 0}
                     precision={0.1}
                     readOnly
                     emptyIcon={
@@ -107,7 +112,7 @@ function Detail() {
                       />
                     }
                   />
-                  <span>{movie.rating} / 10</span>
+                  <span>{movie.vote_average} / 10</span>
                   <li style={{ marginTop: "1rem" }}>
                     <span>Running Time :</span>
                     {movie.runtime}min
@@ -116,12 +121,12 @@ function Detail() {
                     <span>Genre : </span>
                     {movie.genres?.length > 1
                       ? movie.genres.map((item, key) => (
-                          <span key={key}>{item} </span>
+                          <span key={key}>{item.name}</span>
                         ))
                       : movie.genres}
                   </li>
                   <li style={{ marginTop: "0.5rem" }}>
-                    {movie.description_full}
+                    {movie.overview}
                   </li>
                 </ul>
               </CardContent>

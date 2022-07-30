@@ -46,15 +46,17 @@ function Movie({ searchTerm, setHeroMovie }) {
   //fetch data
   const getMoviesInit = async () => {
     setLoading(true)
+    setPageNumber(1)
     await fetch(
-      `https://yts.mx/api/v2/list_movies.json?minimum_rating=8&sort_by=year&`
+      `https://api.themoviedb.org/3/discover/movie?api_key=78bce36c26d02da0ee348cdbbe4f56fc`
     )
       .then((res) => res.json())
-
-      .then((res) => {
-        loadMovies(res.data.movies)
+      .then((res) => res.results)
+      .then((movies) => {
+        loadMovies(movies)
         if (id == null) {
-          setHeroMovie(res.data.movies)
+          setHeroMovie(movies)
+          console.log(movies)
         }
       })
       .then(() => setLoading(false))
@@ -66,15 +68,15 @@ function Movie({ searchTerm, setHeroMovie }) {
     setLoading(true)
     setNoresult(false)
     await fetch(
-      `https://yts.mx/api/v2/list_movies.json?minimum_rating=3&sort_by=year&query_term=${searchTerm}`
+      `https://api.themoviedb.org/3/search/movie?api_key=78bce36c26d02da0ee348cdbbe4f56fc&query=${searchTerm}`
     )
       .then((res) => res.json())
-      .then((res) => {
-        if (res.data.movies === undefined) {
+      .then((data) => {
+        if (data.results === undefined) {
           setNoresult(true)
         } else {
-          loadMovies(res.data.movies)
-          setMovieCount(res.data.movie_count)
+          loadMovies(data.results)
+          setMovieCount(data.total_results)
         }
       })
       .then(() => setLoading(false))
@@ -83,18 +85,25 @@ function Movie({ searchTerm, setHeroMovie }) {
       })
   }
   const loadMoreMovie = async () => {
-    await fetch(
-      `https://yts.mx/api/v2/list_movies.json?minimum_rating=3&sort_by=year&query_term=${searchTerm}&page=${pageNumber}`
-    )
-      .then((res) => res.json())
-      .then((res) => res.data)
+    let data = ""
+    if (searchTerm === "") {
+      data = await fetch(
+        `https://api.themoviedb.org/3/discover/movie?api_key=78bce36c26d02da0ee348cdbbe4f56fc&page=${pageNumber}`
+      )
+    } else {
+      data = await fetch(
+        `https://api.themoviedb.org/3/search/movie?api_key=78bce36c26d02da0ee348cdbbe4f56fc&query=${searchTerm}&page=${pageNumber}`
+      )
+    }
+    data
+      .json()
       .then((data) => {
-        if (data.movies === undefined) {
+        if (data.results === undefined) {
           alert("No more movies")
         } //if ther is no more result, pop up alert
         else {
-          loadMoreMovies(data.movies)
-          setMovieCount(data.movie_count)
+          loadMoreMovies(data.results)
+          setMovieCount(data.total_results)
         }
       })
       .then(setLoading(false))
@@ -150,9 +159,19 @@ function Movie({ searchTerm, setHeroMovie }) {
                   <Link to={`/movie/${movie.id}`}>
                     <img
                       loading="lazy"
-                      src={movie.medium_cover_image}
-                      alt={movie.slug}
-                      style={{ maxWidth: "100%" }}
+                      src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                      onError={({ currentTarget }) => {
+                        if (
+                          currentTarget.src !==
+                          `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`
+                        ) {
+                          currentTarget.src = `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`
+                        }
+                      }}
+                      alt={movie.title}
+                      style={{
+                        maxWidth: "100%"
+                      }}
                     ></img>
                   </Link>
                   <li
@@ -162,7 +181,8 @@ function Movie({ searchTerm, setHeroMovie }) {
                       maxWidth: "230px"
                     }}
                   >
-                    {movie.title_long}
+                    {movie.title}(
+                    {movie.release_date.slice(0, 4)})
                   </li>
                 </Item>
               </Grid>
