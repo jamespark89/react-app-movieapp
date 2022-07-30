@@ -72,6 +72,14 @@ function Detail() {
           >
             <img
               src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              onError={({ currentTarget }) => {
+                if (
+                  currentTarget.src !==
+                  `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`
+                ) {
+                  currentTarget.src = `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`
+                }
+              }}
               alt={movie.title}
               style={{
                 objectFit: "cover",
@@ -102,7 +110,11 @@ function Detail() {
                   </h2>
                   <Rating
                     max={10}
-                    value={movie.vote_average || 0}
+                    value={
+                      Number(
+                        movie.vote_average.toFixed(1)
+                      ) || 0
+                    }
                     precision={0.1}
                     readOnly
                     emptyIcon={
@@ -112,7 +124,10 @@ function Detail() {
                       />
                     }
                   />
-                  <span>{movie.vote_average} / 10</span>
+                  <span>
+                    {Number(movie.vote_average.toFixed(1))}{" "}
+                    / 10
+                  </span>
                   <li style={{ marginTop: "1rem" }}>
                     <span>Running Time :</span>
                     {movie.runtime}min

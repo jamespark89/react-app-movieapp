@@ -55,18 +55,20 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 function Navbar({ setSearchTerm, id }) {
   const [state, setState] = useState("")
   const HomeClick = () => {
-    setState("")
+    setSearchTerm("")
   }
   const inputHandler = (e) => {
     setState(e.target.value.toLowerCase())
   }
   //setTimeout for input delay
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setSearchTerm(state)
     }, 500)
     return () => clearTimeout(timer)
-  }, [setSearchTerm, state])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state])
   //reset input field when id changes
   useEffect(() => {
     setState("")

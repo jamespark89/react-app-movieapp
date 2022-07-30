@@ -48,7 +48,7 @@ function Movie({ searchTerm, setHeroMovie }) {
     setLoading(true)
     setPageNumber(1)
     await fetch(
-      `https://api.themoviedb.org/3/discover/movie?api_key=78bce36c26d02da0ee348cdbbe4f56fc`
+      `https://api.themoviedb.org/3/discover/movie?api_key=78bce36c26d02da0ee348cdbbe4f56fc&status=Released`
     )
       .then((res) => res.json())
       .then((res) => res.results)
@@ -56,7 +56,6 @@ function Movie({ searchTerm, setHeroMovie }) {
         loadMovies(movies)
         if (id == null) {
           setHeroMovie(movies)
-          console.log(movies)
         }
       })
       .then(() => setLoading(false))
@@ -72,7 +71,8 @@ function Movie({ searchTerm, setHeroMovie }) {
     )
       .then((res) => res.json())
       .then((data) => {
-        if (data.results === undefined) {
+        console.log(data)
+        if (data.total_results === 0) {
           setNoresult(true)
         } else {
           loadMovies(data.results)
@@ -98,10 +98,9 @@ function Movie({ searchTerm, setHeroMovie }) {
     data
       .json()
       .then((data) => {
-        if (data.results === undefined) {
-          alert("No more movies")
-        } //if ther is no more result, pop up alert
-        else {
+        if (data.results.length === 0) {
+          alert("No more movies") //if ther is no more result, pop up alert
+        } else {
           loadMoreMovies(data.results)
           setMovieCount(data.total_results)
         }
@@ -125,6 +124,7 @@ function Movie({ searchTerm, setHeroMovie }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber])
+
   return (
     <Box sx={{ margin: "1rem" }}>
       {loading ? (
@@ -182,7 +182,10 @@ function Movie({ searchTerm, setHeroMovie }) {
                     }}
                   >
                     {movie.title}(
-                    {movie.release_date.slice(0, 4)})
+                    {movie.release_data !== undefined
+                      ? movie.release_date.slice(0, 4)
+                      : null}
+                    )
                   </li>
                 </Item>
               </Grid>
