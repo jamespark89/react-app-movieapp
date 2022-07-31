@@ -11,7 +11,7 @@ import LoadingSpinner from "../components/LoadingSpinner"
 import { useSelector, useDispatch } from "react-redux"
 import { bindActionCreators } from "redux"
 import { actionCreators } from "../state/index"
-
+import { API_KEY, IMG_URL } from "../config/config"
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
     theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -43,12 +43,13 @@ function Movie({ searchTerm, setHeroMovie }) {
     actionCreators,
     dispatch
   )
+
   //fetch data
   const getMoviesInit = async () => {
     setLoading(true)
     setPageNumber(1)
     await fetch(
-      `https://api.themoviedb.org/3/discover/movie?api_key=78bce36c26d02da0ee348cdbbe4f56fc&status=Released`
+      `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&status=Released`
     )
       .then((res) => res.json())
       .then((res) => res.results)
@@ -67,7 +68,7 @@ function Movie({ searchTerm, setHeroMovie }) {
     setLoading(true)
     setNoresult(false)
     await fetch(
-      `https://api.themoviedb.org/3/search/movie?api_key=78bce36c26d02da0ee348cdbbe4f56fc&query=${searchTerm}`
+      `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${searchTerm}`
     )
       .then((res) => res.json())
       .then((data) => {
@@ -88,11 +89,11 @@ function Movie({ searchTerm, setHeroMovie }) {
     let data = ""
     if (searchTerm === "") {
       data = await fetch(
-        `https://api.themoviedb.org/3/discover/movie?api_key=78bce36c26d02da0ee348cdbbe4f56fc&page=${pageNumber}`
+        `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${pageNumber}`
       )
     } else {
       data = await fetch(
-        `https://api.themoviedb.org/3/search/movie?api_key=78bce36c26d02da0ee348cdbbe4f56fc&query=${searchTerm}&page=${pageNumber}`
+        `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${searchTerm}&page=${pageNumber}`
       )
     }
     data
@@ -112,7 +113,7 @@ function Movie({ searchTerm, setHeroMovie }) {
   useEffect(() => {
     if (searchTerm === "") getMoviesInit()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [searchTerm])
   useEffect(() => {
     if (searchTerm !== "") getMoviesbyQuery()
     setPageNumber(1)
@@ -159,13 +160,13 @@ function Movie({ searchTerm, setHeroMovie }) {
                   <Link to={`/movie/${movie.id}`}>
                     <img
                       loading="lazy"
-                      src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                      src={`${IMG_URL}${movie.poster_path}`}
                       onError={({ currentTarget }) => {
                         if (
                           currentTarget.src !==
-                          `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`
+                          `${IMG_URL}${movie.backdrop_path}`
                         ) {
-                          currentTarget.src = `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`
+                          currentTarget.src = `${IMG_URL}${movie.backdrop_path}`
                         }
                       }}
                       alt={movie.title}
@@ -177,15 +178,11 @@ function Movie({ searchTerm, setHeroMovie }) {
                   <li
                     className="movieTitle"
                     style={{
-                      listStyleType: "none",
-                      maxWidth: "230px"
+                      listStyleType: "none"
                     }}
                   >
                     {movie.title}(
-                    {movie.release_data !== undefined
-                      ? movie.release_date.slice(0, 4)
-                      : null}
-                    )
+                    {movie.release_date?.slice(0, 4)})
                   </li>
                 </Item>
               </Grid>

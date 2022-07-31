@@ -6,6 +6,7 @@ import Rating from "@mui/material/Rating"
 import StarIcon from "@mui/icons-material/Star"
 import LoadingSpinner from "../components/LoadingSpinner"
 import { styled } from "@mui/material"
+import { API_KEY, IMG_URL } from "../config/config"
 import {
   Box,
   Card,
@@ -28,7 +29,7 @@ function Detail() {
     try {
       const json = await (
         await fetch(
-          `https://api.themoviedb.org/3/movie/${id}?api_key=78bce36c26d02da0ee348cdbbe4f56fc&query=${searchTerm}`
+          `https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}`
         )
       ).json()
       setMovie(json)
@@ -71,13 +72,13 @@ function Detail() {
             disableGutters
           >
             <img
-              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              src={`${IMG_URL}${movie.poster_path}`}
               onError={({ currentTarget }) => {
                 if (
                   currentTarget.src !==
-                  `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`
+                  `${IMG_URL}${movie.backdrop_path}`
                 ) {
-                  currentTarget.src = `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`
+                  currentTarget.src = `${IMG_URL}${movie.backdrop_path}`
                 }
               }}
               alt={movie.title}
@@ -106,7 +107,7 @@ function Detail() {
                 >
                   <h2>
                     {movie.title}(
-                    {movie.release_date.slice(0, 4)})
+                    {movie.release_date?.slice(0, 4)})
                   </h2>
                   <Rating
                     max={10}
@@ -134,11 +135,9 @@ function Detail() {
                   </li>
                   <li style={{ marginTop: "0.5rem" }}>
                     <span>Genre : </span>
-                    {movie.genres?.length > 1
-                      ? movie.genres.map((item, key) => (
-                          <span key={key}>{item.name}</span>
-                        ))
-                      : movie.genres}
+                    {movie.genres?.map((item, key) => (
+                      <span key={key}>{item.name}</span>
+                    ))}
                   </li>
                   <li style={{ marginTop: "0.5rem" }}>
                     {movie.overview}

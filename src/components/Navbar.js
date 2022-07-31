@@ -55,7 +55,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 function Navbar({ setSearchTerm, id }) {
   const [state, setState] = useState("")
   const HomeClick = () => {
-    setSearchTerm("")
+    setState("")
   }
   const inputHandler = (e) => {
     setState(e.target.value.toLowerCase())
